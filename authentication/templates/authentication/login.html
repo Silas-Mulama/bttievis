@@ -1,0 +1,67 @@
+{% extends 'main.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow p-4 rounded-4" style="width: 380px;">
+    <h3 class="text-center mb-4">Login</h3>
+
+    <!-- Django form start -->
+    <form method="post" action="">
+      {% csrf_token %}
+      
+      <!-- Display error or message -->
+      {% if error %}
+        <div class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+      {% endif %}
+      {% if message %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+      {% endif %}
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="username" 
+          name="username" 
+          placeholder="Enter username" 
+          required>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="password" 
+          name="password" 
+          placeholder="Enter password" 
+          required>
+      </div>
+
+      <!-- Submit -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-success">Login</button>
+      </div>
+
+      <!-- Extra links -->
+      <p class="text-center mt-3 mb-1">
+        <a href="{% url 'reset_password' %}">Forgot your password?</a>
+      </p>
+      <p class="text-center">
+        Don’t have an account? <a href="{% url 'signup' %}">Sign up</a>
+      </p>
+    </form>
+    <!-- Django form end -->
+
+  </div>
+</section>
+{% endblock %}

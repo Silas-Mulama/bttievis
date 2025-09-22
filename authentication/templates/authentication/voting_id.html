@@ -1,0 +1,48 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Your Voting ID | BTTI EVIS{% endblock %}
+
+{% block content %}
+<section class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow-lg p-4 rounded-4 text-center" style="max-width: 450px;">
+    
+    <!-- Success Icon -->
+    <div class="mb-3">
+      <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+    </div>
+    
+    <!-- Heading -->
+    <h3 class="fw-bold text-success mb-3">Your Voting ID</h3>
+    <p class="text-muted mb-4">Please use this unique ID when casting your vote. Keep it safe and do not share it with anyone.</p>
+    
+    <!-- Voting ID Box -->
+    <div class="border rounded-3 bg-light py-3 px-4 mb-3 position-relative">
+      <h4 class="fw-bold text-dark mb-0" id="votingIdText">{{ voting_id }}</h4>
+      <button 
+        class="btn btn-sm btn-outline-success position-absolute top-50 end-0 translate-middle-y me-2"
+        onclick="copyVotingId()">
+        <i class="bi bi-clipboard"></i>
+      </button>
+    </div>
+    <small id="copyMessage" class="text-success d-none">Copied!</small>
+
+    <!-- Actions -->
+    <a href="{% url 'verify_voting_id'%}" class="btn btn-success w-100 mb-2">Go to Elections</a>
+    <a href="{% url 'home' %}" class="btn btn-outline-success w-100">Back to Home</a>
+    
+  </div>
+</section>
+
+<!-- Copy to Clipboard Script -->
+<script>
+  function copyVotingId() {
+    const text = document.getElementById('votingIdText').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const msg = document.getElementById('copyMessage');
+      msg.classList.remove('d-none');
+      setTimeout(() => msg.classList.add('d-none'), 2000);
+    });
+  }
+</script>
+{% endblock %}

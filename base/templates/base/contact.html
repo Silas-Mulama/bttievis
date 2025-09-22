@@ -1,0 +1,51 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Contact | BTTI EVIS{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-success">Contact Us</h1>
+      <p class="text-muted">Reach out to the BTTI EVIS team for support or inquiries.</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Contact Information -->
+      <div class="col-lg-5">
+        <div class="p-4 shadow rounded bg-white h-100">
+          <h5 class="fw-bold mb-4">Our Contact Details</h5>
+          <p><i class="bi bi-geo-alt-fill text-success me-2"></i> Butere Technical Training Institute, Kenya</p>
+          <p><i class="bi bi-envelope-fill text-success me-2"></i> support@btti.ac.ke</p>
+          <p><i class="bi bi-telephone-fill text-success me-2"></i> +254 700 123 456</p>
+          <p><i class="bi bi-clock-fill text-success me-2"></i> Mon - Fri, 8:00am - 5:00pm</p>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="col-lg-7">
+        <div class="p-4 shadow rounded bg-white h-100">
+          <h5 class="fw-bold mb-4">Send Us a Message</h5>
+          <form method="post" action="">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-control" placeholder="Enter your name">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Your Email</label>
+              <input type="email" class="form-control" placeholder="Enter your email">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Message</label>
+              <textarea class="form-control" rows="4" placeholder="Write your message"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

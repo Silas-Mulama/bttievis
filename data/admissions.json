@@ -1,0 +1,23 @@
+
+[
+  { "admission_number": "DICT/01542/24S", "full_name": "John Mwangi" },
+  { "admission_number": "DICT/01543/24S", "full_name": "Mary Atieno" },
+  { "admission_number": "DICT/01544/24S", "full_name": "Peter Odhiambo" },
+  { "admission_number": "DICT/01545/24S", "full_name": "Grace Wambui" },
+  { "admission_number": "DICT/01546/24S", "full_name": "Brian Kiptoo" },
+  { "admission_number": "DICT/01547/24S", "full_name": "Alice Naliaka" },
+  { "admission_number": "DICT/01548/24S", "full_name": "Samuel Otieno" },
+  { "admission_number": "DICT/01549/24S", "full_name": "Faith Chebet" },
+  { "admission_number": "DICT/01550/24S", "full_name": "Kevin Mutiso" },
+  { "admission_number": "DICT/01551/24S", "full_name": "Diana Achieng" },
+  { "admission_number": "DICT/01552/24S", "full_name": "Paul Mworia" },
+  { "admission_number": "DICT/01553/24S", "full_name": "Lucy Wairimu" },
+  { "admission_number": "DICT/01554/24S", "full_name": "Daniel Korir" },
+  { "admission_number": "DICT/01555/24S", "full_name": "Christine Nyambura" },
+  { "admission_number": "DICT/01556/24S", "full_name": "George Musyoka" },
+  { "admission_number": "DICT/01557/24S", "full_name": "Rebecca Akinyi" },
+  { "admission_number": "DICT/01558/24S", "full_name": "Felix Barasa" },
+  { "admission_number": "DICT/01559/24S", "full_name": "Naomi Jepkoech" },
+  { "admission_number": "DICT/01560/24S", "full_name": "Stephen Wekesa" },
+  { "admission_number": "DICT/01561/24S", "full_name": "Mercy Wangui" }
+]

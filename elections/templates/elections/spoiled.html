@@ -1,0 +1,51 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Abstain Vote | BTTI EVIS{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-header bg-danger text-white text-center rounded-top-4">
+            <h4 class="mb-0 fw-bold">
+              <i class="bi bi-x-circle me-2"></i> Abstain from Voting
+            </h4>
+          </div>
+          <div class="card-body p-4">
+            <p class="text-muted text-center mb-4">
+              Please provide a reason for abstaining. This helps us improve the election process.
+            </p>
+            
+            <!-- Abstain Form -->
+            <form method="post" action="{% url 'abstain' election.id  %}">
+              {% csrf_token %}
+              
+              <div class="mb-3">
+                <label for="reason" class="form-label fw-semibold">Reason for Abstaining</label>
+                <textarea id="reason" name="reason" rows="4" 
+                          class="form-control shadow-sm" 
+                          placeholder="Write your reason here..." required></textarea>
+              </div>
+
+              <div class="d-flex justify-content-between mt-4">
+                <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-outline-secondary">
+                  <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+                <button type="submit" class="btn btn-danger fw-bold">
+                  Submit Abstain
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer text-center text-muted small bg-light">
+            Your feedback remains confidential.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

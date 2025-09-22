@@ -1,0 +1,98 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Elections | BTTI EVIS{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-success display-4">🗳️ Student Elections</h1>
+      <p class="text-muted lead">
+        Participate in shaping the future of our institution by casting your vote.
+      </p>
+    </div>
+
+    <!-- Elections Grid -->
+    <div class="row g-4">
+      {% for election in elections %}
+      <div class="col-sm-6 col-lg-4 col-xl-3">
+        <div class="card h-100 shadow-sm border-0 rounded-4 election-card">
+          <!-- Banner -->
+           {% if election.is_available %}
+            <div class="position-relative">
+            <img src="{% static 'assets/img/votee.png' %}" class="card-img-top rounded-top" alt="Election Banner">
+            <span class="badge bg-success position-absolute top-0 end-0 m-2 rounded-pill px-3">
+              Ongoing
+            </span>
+          </div>
+            {% else %}
+            <div class="position-relative">
+            <img src="{% static 'assets/img/votee.png' %}" class="card-img-top rounded-top" alt="Election Banner">
+            <span class="badge bg-danger position-absolute top-0 end-0 m-2 rounded-pill px-3">
+              Finished
+            </span>
+          </div>
+            
+            {% endif %}
+          
+          
+          <div class="card-body text-center d-flex flex-column">
+            <h5 class="card-title text-success fw-bold">{{ election.name }}</h5>
+            <p class="text-muted small mb-3">
+              {{ election.description|default:"Vote for your preferred student leaders." }}
+            </p>
+
+            <!-- Buttons -->
+            <div class="mt-auto">
+              {% if not request.user.has_voted %}
+                <a href="{% url 'election_summary' election.id %}" 
+                   class="btn btn-success w-100 fw-semibold rounded-pill shadow-sm mb-2">
+                  Cast Your Vote
+                </a>
+                <a href="{% url 'abstain' election.id %}" 
+                   class="btn btn-outline-danger w-100 fw-semibold rounded-pill shadow-sm">
+                  Abstain
+                </a>
+              {% else %}
+                <a href="{% url 'vote_result' election.id %}" 
+                   class="btn btn-outline-secondary w-100 fw-semibold rounded-pill shadow-sm disabled-link">
+                  View Results
+                </a>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="card-footer bg-white border-0 text-center small text-muted">
+            <i class="bi bi-calendar-event me-1"></i> 
+            {{ election.start_datetime|date:"M d, Y" }} <br>
+            <i class="bi bi-clock me-1"></i> 
+            {{ election.start_datetime|time:"g:i A" }} – {{ election.end_datetime|time:"g:i A" }}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="alert alert-warning text-center shadow-sm rounded-3">
+          🚫 No active elections at the moment. Please check back later.
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Custom Styling -->
+<style>
+  .election-card {
+    transition: all 0.3s ease-in-out;
+  }
+  .election-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+</style>
+{% endblock %}

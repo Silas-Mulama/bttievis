@@ -1,0 +1,124 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Vote | BTTI EVIS{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+    <!-- Election Header -->
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-success display-5">{{ election.name }}</h1>
+      <p class="text-muted fs-5">Cast your vote across all positions in this election.</p>
+    </div>
+
+    <!-- Loop through positions -->
+    {% for position in positions %}
+      <div class="mb-5">
+        <!-- Position Title -->
+        <h3 class="fw-bold text-dark mb-4 border-bottom pb-2">
+          {{ position.name }}
+        </h3>
+
+        <!-- Horizontal scroll row -->
+        <div class="scroll-container d-flex flex-row gap-4">
+          {% for candidate in position.candidates.all %}
+          <div class="candidate-card card shadow-sm border-0">
+            <!-- Candidate Image -->
+            {% if candidate.image %}
+              <img src="{{ candidate.image.url }}" class="card-img-top candidate-img" alt="{{ candidate.name }}">
+            {% else %}
+              <img src="{% static 'assets/img/default-candidate.png' %}" class="card-img-top candidate-img" alt="Default">
+            {% endif %}
+
+            <!-- Candidate Info -->
+            <div class="card-body text-center">
+              <h5 class="fw-bold text-success">{{ candidate.name }}</h5>
+              <p class="small text-muted mb-1">Party: {{ candidate.party }}</p>
+              <p class="small text-muted">Admission: {{ candidate.admission_number }}</p>
+
+              <!-- Manifesto -->
+              <div class="card-text text-muted manifesto-box">
+                {{ candidate.manifesto|truncatewords:30 }}
+              </div>
+            </div>
+
+        <!-- Vote Button -->
+{% if position.id in user_voted_positions %}
+    <div class="card-footer bg-transparent text-center pb-3">
+      <button class="btn btn-secondary w-100 fw-semibold rounded-pill shadow-sm" disabled>
+        <i class="bi bi-check-circle me-2"></i> Already Voted
+      </button>
+    </div>
+{% else %}
+    <div class="card-footer bg-transparent text-center pb-3">
+      <a href="{% url 'vote_candidate' candidate.id %}" 
+         class="btn btn-success w-100 fw-semibold rounded-pill shadow-sm">
+        <i class="bi bi-check-circle me-2"></i> Vote {{ candidate.name }}
+      </a>
+    </div>
+{% endif %}
+
+          </div>
+          {% endfor %}
+
+          <!-- Abstain card -->
+          {% comment %} <div class="candidate-card card shadow-sm border-0 d-flex justify-content-center align-items-center">
+            <div class="text-center p-4">
+              <i class="bi bi-x-circle text-danger display-4 mb-3"></i>
+              <h5 class="fw-bold text-danger">Abstain</h5>
+              <p class="text-muted small">Skip voting for this position.</p>
+              <a href="{% url 'abstain' election.id position.id %}" 
+                 class="btn btn-outline-danger fw-bold px-4 py-2 rounded-pill shadow-sm">
+                Abstain
+              </a>
+            </div>
+          </div> {% endcomment %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Extra Styling -->
+<style>
+  /* Horizontal scrolling */
+  .scroll-container {
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+  }
+  .scroll-container::-webkit-scrollbar {
+    height: 8px;
+  }
+  .scroll-container::-webkit-scrollbar-thumb {
+    background-color: #198754;
+    border-radius: 4px;
+  }
+
+  .candidate-card {
+    min-width: 280px;
+    max-width: 280px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 15px;
+    flex: 0 0 auto; /* prevent shrinking */
+  }
+  .candidate-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.12);
+  }
+  .candidate-img {
+    height: 220px;
+    object-fit: cover;
+    border-radius: 15px 15px 0 0;
+  }
+  .manifesto-box {
+    font-size: 0.9rem;
+    max-height: 100px;
+    overflow-y: auto;
+    border-top: 1px solid #f1f1f1;
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block title %}Admin Login | BTTI EVIS{% endblock %}
+
+{% block content %}
+<section class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow-lg p-4 rounded-4" style="max-width: 400px; width: 100%;">
+    <!-- Header -->
+    <h3 class="fw-bold text-center text-success mb-3">Admin Login</h3>
+   
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+    <!-- Login Form -->
+    <form method="post" action="">
+      {% csrf_token %}
+
+      <!-- Errors -->
+      {% if error %}
+        <div class="alert alert-danger text-center">{{ error }}</div>
+      {% endif %}
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="username" 
+          name="username" 
+          placeholder="Enter your username" 
+          required>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="password" 
+          name="password" 
+          placeholder="Enter your password" 
+          required>
+      </div>
+
+      <!-- Submit -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-success">Login</button>
+      </div>
+    </form>
+
+    <!-- Back Link -->
+    <p class="text-center mt-3">
+      <a href="{% url 'home' %}" class="text-success">Back to Home</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

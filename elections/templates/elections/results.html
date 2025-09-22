@@ -1,0 +1,121 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Election Results | BTTI EVIS{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+    <!-- Heading -->
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-success display-5">Election Results</h1>
+      <p class="text-muted fs-5">See how the votes were cast and who emerged as the winners!</p>
+    </div>
+
+    <!-- Election Info -->
+    <div class="card shadow-sm mb-4 border-0">
+      <div class="card-body text-center">
+        <h3 class="fw-bold text-dark">{{ election.name }}</h3>
+        <p class="text-muted mb-0">
+          Held on <span class="fw-semibold">{{ election.start_datetime|date:"F j, Y" }}</span>
+          from <span class="fw-semibold">{{ election.start_datetime|time:"g:i A" }}</span> 
+          to <span class="fw-semibold">{{ election.end_datetime|time:"g:i A" }}</span>
+        </p>
+        <p class="text-muted mb-0">
+          Total votes cast: <span class="fw-semibold text-success">{{ total_votes }}</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Print Button -->
+    <div class="text-end mb-4 no-print">
+      <button type="button" class="btn btn-success shadow-sm px-4" onclick="printResults()">
+        🖨️ Print Results
+      </button>
+    </div>
+
+    <!-- Dynamic Results by Position -->
+    {% for position, data in results.items %}
+      <div class="mb-5">
+        <!-- Position Title -->
+        <h3 class="fw-bold text-success mb-3">{{ position.name }}</h3>
+
+        <!-- Candidates Table -->
+        <div class="table-responsive">
+          <table class="table table-hover shadow-sm bg-white rounded">
+            <thead class="table-success text-center">
+              <tr>
+                <th>#</th>
+                <th>Candidate</th>
+                <th>Party</th>
+                <th>Votes</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for candidate in data.candidates %}
+                <tr>
+                  <td class="text-center">{{ forloop.counter }}</td>
+                  <td>{{ candidate.name }}</td>
+                  <td>{{ candidate.party }}</td>
+                  <td class="fw-bold text-success text-center">{{ candidate.total_votes }}</td>
+                  <td>
+                    <div class="progress" style="height: 20px;">
+                      <div class="progress-bar {% if candidate == data.winner %}bg-success{% else %}bg-info{% endif %}"
+                           style="width: {{ candidate.vote_percentage }}%;">
+                        {{ candidate.vote_percentage|floatformat:1 }}%
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center text-muted">No candidates for this position.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Winner -->
+        {% if data.winner %}
+          <div class="text-center mt-3">
+            <h6 class="fw-bold text-success">
+              🏆 Winner: {{ data.winner.name }} ({{ data.winner.party }}) 
+              with {{ data.winner.total_votes }} votes
+            </h6>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Scripts -->
+<script>
+  function printResults() {
+    window.print();
+  }
+</script>
+
+<!-- Styling -->
+<style>
+  .table {
+    border-radius: 12px;
+  }
+  .progress {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  /* Hide elements with .no-print class when printing */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+</style>
+{% endblock %}

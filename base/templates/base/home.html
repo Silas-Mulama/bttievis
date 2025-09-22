@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Home | BTTI EVIS{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section id="hero" class="hero d-flex align-items-center text-center" 
+         style="min-height: 80vh; background: linear-gradient(to right, #007bff, #6610f2); color: #fff;">
+  <div class="container" data-aos="fade-up">
+    <h1 class="fw-bold">BTTI Electronic Voting System</h1>
+    <p class="lead mb-4">Secure. Transparent. Simple. Empowering students to choose their leaders digitally.</p>
+
+    <div class="d-flex flex-column flex-md-row justify-content-center gap-2">
+      {% if not user.is_authenticated %}
+        <a href="{% url 'login-user' %}" class="btn btn-light btn-lg">Login</a>
+        <a href="{% url 'signup' %}" class="btn btn-outline-light btn-lg">Register</a>
+      {% else %}
+        <a href="{% url 'verify_voting_id' %}" class="btn btn-light btn-lg">Vote</a>
+
+        {% if not user.voting_id %}
+          <a href="{% url 'voting_id' %}" class="btn btn-outline-light btn-lg">Get Voting ID</a>
+        {% endif %}
+
+        <!-- ✅ Dropdown for Election Results -->
+        <div class="dropdown">
+          <button class="btn btn-outline-light btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            View Results
+          </button>
+          <ul class="dropdown-menu">
+            {% for election in elections %}
+              <li>
+                <a class="dropdown-item" href="{% url 'vote_result' election.id %}">
+                  {{ election.name }}
+                </a>
+              </li>
+            {% empty %}
+              <li><span class="dropdown-item text-muted">No elections available</span></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- keep the rest of your about, features, cta sections the same -->
+{% endblock %}

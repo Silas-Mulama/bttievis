@@ -1,0 +1,45 @@
+{% extends 'main.html' %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+<section class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow p-4 rounded-4" style="width: 420px;">
+    <h3 class="text-center mb-4 text-success">Create Account</h3>
+
+    <form method="post" action="{% url 'signup' %}">
+      {% csrf_token %}
+      
+      <!-- Non-field errors -->
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <!-- Loop through fields -->
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small">
+              {{ field.errors }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <!-- Submit -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-success">Sign Up</button>
+      </div>
+
+      <!-- Login link -->
+      <p class="text-center mt-3">
+        Already have an account? <a href="{% url 'login-user' %}" class="text-success fw-semibold">Login</a>
+      </p>
+    </form>
+  </div>
+</section>
+{% endblock %}
