@@ -1,36 +1,49 @@
 {% extends 'main.html' %}
 {% load static %}
+
 {% block title %}Home | BTTI EVIS{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section id="hero" class="hero d-flex align-items-center text-center" 
-         style="min-height: 80vh; background: linear-gradient(to right, #007bff, #6610f2); color: #fff;">
-  <div class="container" data-aos="fade-up">
-    <h1 class="fw-bold">BTTI Electronic Voting System</h1>
-    <p class="lead mb-4">Secure. Transparent. Simple. Empowering students to choose their leaders digitally.</p>
+<section id="hero" class="d-flex align-items-center text-center position-relative" 
+         style="min-height: 90vh; background: linear-gradient(135deg, #198754, #20c997); color: #fff;">
+  <div class="container position-relative z-2" data-aos="fade-up">
 
-    <div class="d-flex flex-column flex-md-row justify-content-center gap-2">
+    <!-- Title -->
+    <h1 class="fw-bold display-4 mb-3">BTTI Electronic Voting System</h1>
+    <p class="lead mb-4">Secure • Transparent • Simple <br> Empowering students to choose their leaders digitally</p>
+
+    <!-- Buttons -->
+    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
       {% if not user.is_authenticated %}
-        <a href="{% url 'login-user' %}" class="btn btn-light btn-lg">Login</a>
-        <a href="{% url 'signup' %}" class="btn btn-outline-light btn-lg">Register</a>
+        <a href="{% url 'login-user' %}" class="btn btn-light btn-lg shadow-sm rounded-pill px-4">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Login
+        </a>
+        <a href="{% url 'signup' %}" class="btn btn-outline-light btn-lg shadow-sm rounded-pill px-4">
+          <i class="bi bi-person-plus me-2"></i>Register
+        </a>
       {% else %}
-        <a href="{% url 'verify_voting_id' %}" class="btn btn-light btn-lg">Vote</a>
+        <a href="{% url 'verify_voting_id' %}" class="btn btn-light btn-lg shadow-sm rounded-pill px-4">
+          <i class="bi bi-check2-circle me-2"></i>Vote
+        </a>
 
         {% if not user.voting_id %}
-          <a href="{% url 'voting_id' %}" class="btn btn-outline-light btn-lg">Get Voting ID</a>
+          <a href="{% url 'voting_id' %}" class="btn btn-outline-light btn-lg shadow-sm rounded-pill px-4">
+            <i class="bi bi-key me-2"></i>Get Voting ID
+          </a>
         {% endif %}
 
-        <!-- ✅ Dropdown for Election Results -->
+        <!-- Dropdown -->
         <div class="dropdown">
-          <button class="btn btn-outline-light btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            View Results
+          <button class="btn btn-outline-light btn-lg shadow-sm rounded-pill px-4 dropdown-toggle" 
+                  type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bar-chart-line me-2"></i>View Results
           </button>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu shadow">
             {% for election in elections %}
               <li>
                 <a class="dropdown-item" href="{% url 'vote_result' election.id %}">
-                  {{ election.name }}
+                  <i class="bi bi-check2-square me-2 text-success"></i>{{ election.name }}
                 </a>
               </li>
             {% empty %}
@@ -41,7 +54,45 @@
       {% endif %}
     </div>
   </div>
+
+  <!-- Overlay for effect -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" 
+       style="background: rgba(0,0,0,0.4); z-index:1;"></div>
 </section>
 
-<!-- keep the rest of your about, features, cta sections the same -->
+<!-- About / Features Section -->
+<section id="about" class="py-5 bg-light text-center">
+  <div class="container">
+    <h2 class="fw-bold text-success mb-4">Why BTTI EVIS?</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <i class="bi bi-shield-lock display-4 text-success mb-3"></i>
+            <h5 class="fw-bold">Secure</h5>
+            <p class="text-muted">Your votes are encrypted and protected from unauthorized access.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <i class="bi bi-eye display-4 text-success mb-3"></i>
+            <h5 class="fw-bold">Transparent</h5>
+            <p class="text-muted">Results are visible in real time, ensuring openness and trust.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 rounded-4">
+          <div class="card-body">
+            <i class="bi bi-phone display-4 text-success mb-3"></i>
+            <h5 class="fw-bold">Easy to Use</h5>
+            <p class="text-muted">Vote anytime, anywhere with just a few clicks on any device.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

@@ -2,23 +2,15 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-# from authentication.models import AuditLog,AdmissionNumber  # import your AuditLog model
 from datetime import timedelta
 from uuid import uuid4
-
 def default_end_datetime():
     return timezone.now() + timedelta(hours=8)
 
 def TimeStampedModel():
     return timezone.now()
 
-# # all registered voters
-# def default_total_voters():
-#     return AdmissionNumber.objects.count()
-    
- 
+
 class Candidate_Position(models.Model):
     election = models.ForeignKey('Election', on_delete=models.CASCADE, related_name='positions')
     name = models.CharField(max_length=100)  # e.g. President, Secretary
@@ -35,6 +27,7 @@ class Election(models.Model):
     name = models.CharField(max_length=200)
     id= models.UUIDField(primary_key=True, default=uuid4, editable=False)
     description = models.TextField(blank=True, null=True)
+    
     # Use datetime instead of splitting date + time
     start_datetime = models.DateTimeField(default=timezone.now)
     end_datetime = models.DateTimeField(default=default_end_datetime)
@@ -112,3 +105,25 @@ class spoiled_votes(models.Model):
 
     def __str__(self):
         return f"Spoiled vote in {self.election.name} by {self.voter.first_name} {self.voter.last_name} of admission number {self.voter.admission_number}"   
+
+# User  = settings.AUTH_USER_MODEL
+# class VotingID(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="voting_ids")
+#     election = models.ForeignKey(Election, on_delete=models.CASCADE, related_name="voting_ids")
+#     code = models.CharField(max_length=100, unique=True, default=uuid.uuid4)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     expires_at = models.DateTimeField()
+#     used = models.BooleanField(default=False)
+
+#     def is_valid(self):
+#         return (not self.used) and (self.expires_at > timezone.now())
+
+
+# def generate_voting_id(user, election):
+#     expiry_time = election.end_datetime  # Expire when election ends
+#     voting_id = VotingID.objects.create(
+#         user=user,
+#         election=election,
+#         expires_at=expiry_time
+#     )
+#     return voting_id.code

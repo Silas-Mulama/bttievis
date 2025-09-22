@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 import string,random
 from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
 
 
 
@@ -22,10 +24,19 @@ def generate_voting_id(length=6):
     voting_id = f"BTTI{''.join(idn)}"
     return voting_id
 
+
+
+def default_end_datetime():
+    return timezone.now() + timedelta(minutes=5)
+
+def TimeStampedModel():
+    return timezone.now()
+
 class VotingID(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     voting_id = models.CharField(max_length=20, unique=True,blank=True,null=True)
-    created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
+    created_at = models.DateTimeField(default=TimeStampedModel)
+    expires_at = models.DateTimeField(default=default_end_datetime)
     is_active = models.BooleanField(default=True)
     
 
@@ -36,6 +47,10 @@ class VotingID(models.Model):
         
     def __str__(self):
         return f"VotingID for {self.user.username}: {self.voting_id}"
+    
+    @property
+    def is_expired(self):
+        return timezone.now() > self.expires_at
     
 # model to store admssion numbers
 class AdmissionNumber(models.Model):
@@ -76,11 +91,14 @@ class AuditLog(models.Model):
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+    action = models.CharField(max_length=5000, choices=ACTION_CHOICES)
     description = models.TextField()  # Custom message
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     device_info = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
-        return f"{self.user} - {self.action} - {self.created_at}"
+        return f"{self.user} - {self.action} - {self.created_at}"   

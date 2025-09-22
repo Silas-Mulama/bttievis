@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     # Elections list
     path('vote/elections/', views.elections, name='elections'),
-    path('vote/elections/', views.elections_done, name='elections'),
+    path('vote/elections/', views.elections_done, name='elections_done'),
 
     # Summary page: positions + candidates + voting
     path('vote/election/<uuid:election_id>/summary/', views.election_summary, name='election_summary'),

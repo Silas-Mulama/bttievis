@@ -1,15 +1,17 @@
 from django.urls import path
-from authentication import views
+from authentication.views import *
 from django.contrib.auth import views as auth_views
 urlpatterns = [
-    path('signup/', views.register_user, name='signup'),
-    path('signin/', views.login_user, name='login-user'),
-    path('otp/', views.otp_verification, name='otp_verification'),
-    path('resent-otp/', views.resent_otp, name='resent_otp'),
-    path('logout/', views.logout_user, name='logout'),
-    path('user/profile/', views.profile, name='my-profile'),
-    path('voting-id/', views.get_voting_id, name='voting_id'),
-    path('verify-voting-id/', views.verify_voting_id, name='verify_voting_id'),
+    path('signup/', register_user, name='signup'),
+    path('signin/', login_user, name='login-user'),
+    path('otp/', otp_verification, name='otp_verification'),
+    path('resent-otp/', resent_otp, name='resent_otp'),
+    path('logout/', logout_user, name='logout'),
+    path('profile-picture/update/',update_profile_pic, name='pro_pic'),
+    path('user/profile/',profile, name='my-profile'),
+    path('voting-id/', get_voting_id, name='voting_id'),
+    path('verify-voting-id/',verify_voting_id, name='verify_voting_id'),
+    
     
      # Reset Password
     path('reset_password/', 

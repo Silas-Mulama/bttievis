@@ -1,0 +1,64 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Update Profile Picture | BTTI EVIS{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light min-vh-100 d-flex align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+
+        <!-- Card -->
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-body p-4 text-center">
+
+            <!-- Current Profile Picture -->
+            <div class="mb-4 position-relative d-inline-block">
+              {% if request.user.image %}
+                <img src="{{ request.user.image.url }}" alt="Profile Picture"
+                     class="rounded-circle border border-3 border-success shadow-sm"
+                     style="width: 140px; height: 140px; object-fit: cover;">
+              {% else %}
+                <img src="{% static 'assets/img/prof.png' %}" alt="Default Profile"
+                     class="rounded-circle border border-3 border-success shadow-sm"
+                     style="width: 140px; height: 140px; object-fit: cover;">
+              {% endif %}
+            </div>
+
+            <!-- Title -->
+            <h4 class="fw-bold text-success mb-3">Update Profile Picture</h4>
+            <p class="text-muted small">Choose a new image and upload it to update your profile picture.</p>
+
+            <!-- Form -->
+            <form method="post" enctype="multipart/form-data" class="text-start">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label for="id_image" class="form-label fw-semibold text-success">Select New Picture</label>
+                <input type="file" name="image" id="id_image" class="form-control">
+
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success fw-semibold rounded-pill shadow-sm">
+                  <i class="bi bi-upload me-2"></i>Upload
+                </button>
+                <a href="{% url 'my-profile' %}" class="btn btn-outline-secondary fw-semibold rounded-pill shadow-sm">
+                  <i class="bi bi-arrow-left me-2"></i>Cancel
+                </a>
+              </div>
+            </form>
+
+          </div>
+        </div>
+        <!-- End Card -->
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+{% endblock %}

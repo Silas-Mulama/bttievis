@@ -4,11 +4,13 @@ from datetime import timedelta
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate,logout
 from .forms import SignUpForm,OTPForm
-from .models import otp,AdmissionNumber,CustomUser,VotingID,AuditLog
+from .models import otp,AdmissionNumber,CustomUser,VotingID,AuditLog,generate_voting_id,default_end_datetime
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 import time
+from django.utils.timezone import now
+from django.contrib import messages
 
 # Create your views here.
 # audit log views
@@ -34,42 +36,66 @@ def get_client_ip(request):
         return x_forwarded_for.split(',')[0]
     return request.META.get('REMOTE_ADDR')
 
-# get a voting ID
+
+
 def get_voting_id(request):
     if not request.user.is_authenticated:
         return redirect('login-user')
-    
+
     try:
-        # create or get existing voting ID
         voting_id_obj, created = VotingID.objects.get_or_create(user=request.user)
+
+        # Check expiry
+        if voting_id_obj.is_expired or not voting_id_obj.is_active:
+            # Regenerate a new voting ID
+            voting_id_obj.voting_id = generate_voting_id()
+            voting_id_obj.expires_at = default_end_datetime()
+            voting_id_obj.is_active = True
+            voting_id_obj.save()
+            log_action(request.user, 'Voting Id regenerated', f'User logged in: {request.user.username}', request)
+
+            messages.info(request, "A Voting ID has been generated.")
+
         voting_id = voting_id_obj.voting_id
-          
+
     except Exception as e:
         voting_id = None
+        messages.error(request, f"Error generating Voting ID: {e}")
 
     return render(request, 'authentication/voting_id.html', {'voting_id': voting_id})
 
 
-# verify voting ID
+
 def verify_voting_id(request):
     if request.method == "POST":
         entered_id = request.POST.get("voting_id")
-        # Check if the ID exists
         try:
             voting_id_obj = VotingID.objects.get(voting_id=entered_id)
+
             # Check if ID belongs to logged-in user
             if voting_id_obj.user != request.user:
                 messages.error(request, "This Voting ID does not belong to you.")
                 return redirect('verify_voting_id')
+
+            # If expired → regenerate
+            if voting_id_obj.is_expired or not voting_id_obj.is_active:
+                voting_id_obj.voting_id = generate_voting_id()
+                voting_id_obj.expires_at = default_end_datetime()
+                voting_id_obj.is_active = True
+                voting_id_obj.save()
+                log_action(request.user, 'Voting Id regenerated', f'User logged in: {request.user.username}', request)
+                messages.warning(request, "Your old Voting ID expired. A new one has been generated.")
+                return redirect('voting_id')
+            log_action(request.user, 'Voting Id verified', f'User logged in: {request.user.username}', request)
             messages.success(request, f"Voting ID {entered_id} is valid!")
-            return redirect('elections')  # Redirect after success
+            return redirect('elections')
 
         except VotingID.DoesNotExist:
             messages.error(request, "Invalid Voting ID. Please try again.")
             return redirect('verify_voting_id')
-    # Handle GET request (show form)
 
     return render(request, 'authentication/verify_voting_id.html')
+
 
 # register user
 def register_user(request):
@@ -225,7 +251,21 @@ def logout_user(request):
    
     return redirect('login-user')
 
+
 # user profile
 def profile(request):
     user = request.user
-    return render(request,'authentication/user_profile.html',{'user':user})
+    activities = AuditLog.objects.filter(user = user)
+    return render(request,'authentication/user_profile.html',{'user':user,'activities':activities})
+
+# update profile pic
+def update_profile_pic(request):
+    if request.method == "POST":
+        image = request.FILES.get("image")
+        if image:
+            request.user.image = image
+            request.user.save()
+            messages.success(request, "Profile picture updated successfully!")
+            return redirect("my-profile")
+    return render(request,'authentication/update_pro_pic.html')
+

@@ -85,10 +85,9 @@
                       <a href="#" class="btn btn-sm btn-outline-success"><i class="bi bi-person-check"></i></a>
                     {% endif %}
                   </td>
+                  <td>{{user.id}}</td>
                 </tr>
-                 <tr>
-                  <td colspan="7" class="text-muted">User ID: {{ user.id }}</td>
-                </tr>
+                
               {% empty %}
                 <tr>
                   <td colspan="6" class="text-center text-muted">No users found</td>
