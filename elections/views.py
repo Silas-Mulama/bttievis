@@ -12,6 +12,10 @@ def elections(request):
 def elections_done(request):
     elections_closed = Election.objects.filter(is_available=False)
     return render(request, 'elections/elections.html', {'elections_done': elections_closed})
+# Show all elections
+def elections_done1(request):
+    elections_closed = Election.objects.filter(is_available=False)
+    return render(request, 'elections/elections.html', {'elections_done': elections_closed})
 
 
 # Election detail -> summary of positions + candidates
